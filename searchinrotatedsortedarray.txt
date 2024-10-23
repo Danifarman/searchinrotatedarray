@@ -1,21 +1,54 @@
 #include <iostream>
 #include <vector>
-#include <algorithm> // Include this for the sort() function
-
 using namespace std;
 
-int main() {
-    vector<int> v = {23, 1, 3, 15, 7, 8};
-
-    // Sort the vector in ascending order
-    sort(v.begin(), v.end());
-
-    // Print the sorted vector
-    cout << "Sorted vector (ascending): ";
-    for (int i = 0; i < v.size(); i++) {
-        cout << v[i] << " ";
+int searchInRotatedSortedArray(vector<int> v, int target) {
+    int start = 0, end = v.size() - 1, mid = 0;
+    
+    while (start <= end) {
+        mid = (start + end) / 2;
+        
+        // Check if the target is at mid
+        if (target == v[mid]) {
+            return mid;
+        }
+        
+        // Check which half is sorted
+        if (v[start] <= v[mid]) { // Left half is sorted
+            
+            if (v[start] <= target && target <= v[mid]) {
+                end = mid - 1;  // Target is in the left half
+            } else {
+                start = mid + 1;  // Target is in the right half
+            }
+            
+        } else { // Right half is sorted
+            
+            if (v[mid] <= target && target <= v[end]) {
+                start = mid + 1;  // Target is in the right half
+            } else {
+                end = mid - 1;  // Target is in the left half
+            }
+        }
     }
-    cout << endl;
+    
+    // Target not found
+    return -1;
+}
+
+int main() {
+    int target;
+    cout << "Enter target: ";
+    cin >> target;
+    
+    vector<int> v = {7, 8, 1, 2, 3, 4, 5, 6};
+    int ans = searchInRotatedSortedArray(v, target);
+    
+    if (ans != -1) {
+        cout << "Element found at index: " << ans << endl;
+    } else {
+        cout << "Element not found." << endl;
+    }
 
     return 0;
 }
